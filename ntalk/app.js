@@ -1,6 +1,5 @@
 var express = require('express');
-var routes = require('./routes/index');
-users = require('./routes/users');
+var load = require('express-load');
 
 var app = express();
 
@@ -8,9 +7,11 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
-app.use('/', routes);
-app.use('/users', users);
+load('models')
+  .then('controllers')
+  .then('routes')
+  .into(app);
 
 app.listen(3000, function() {
-  console.log('Example app listening on port 3000!');
+  console.log('App listening on port 3000!');
 });
