@@ -8,8 +8,8 @@ module.exports = function(app) {
 
         login: async function(req, res) {
             try {
-                const query = { email: req.body.email };
-                const usuario = await Usuario.findOne(query).select('nome email').exec();
+                const { email } = req.body.usuario;
+                const usuario = await Usuario.findOne({ email }).exec();
                 
                 if (usuario) {
                     req.session.usuario = usuario;

@@ -2,64 +2,75 @@ module.exports = function(app) {
     var Usuario = app.models.usuario;
 
     var ContatosController = {
-        index: function(req, res) {
-            var _id = req.session.usuario._id;
-            Usuario.findById(_id, function(erro, usuario) {
-                var contatos = usuario.contatos;
-                var resultado = { contatos: contatos };
-                res.render('contatos/index', resultado);
-            });
+        index: async function(req, res) {
+            try {
+                const _id = req.session.usuario._id;
+                const usuario = await Usuario.findById(_id).exec();
+                const contatos = usuario.contatos;
+                res.render('contatos/index', { contatos: contatos, usuario });
+            } catch (error) {
+                res.status(500).send("Ocorreu um erro: " + error);
+            }
         },
-        create: function(req, res) {
-           var _id = req.session.usuario._id;
-           Usuario.findById(_id, function(erro, usuario) {
-               var contato = req.body.contato;
-               var contatos = usuario.contatos;
-               contatos.push(contato);
-               usuario.save(function() {
-                   res.redirect('/contatos');
-               });
-           });
+        create: async function(req, res) {
+            try {
+                const _id = req.session.usuario._id;
+                const contato = req.body.contato;
+                const usuario = await Usuario.findById(_id).exec();
+                usuario.contatos.push(contato);
+                await usuario.save();
+                res.redirect('/contatos');
+           } catch (error) {
+                res.status(500).send("Ocorreu um erro: " + error);
+           }
         },
-        show: function(req, res) {
-            var _id = req.session.usuario._id;
-            Usuario.findById(_id, function(erro, usuario) {
+        show: async function(req, res) {
+            try {
+                var _id = req.session.usuario._id;
                 var contatoID = req.params.id;
-                var contato = usuario.contatos.id(contatoID);
-                var resultado = { contato: contato };
-                res.render('contatos/show', resultado);
-            });
+                var contato = await Usuario.findById(_id).exec();
+                contato = contato.contatos.id(contatoID);
+                res.render('contatos/show', { contato: contato });
+            } catch (error) {
+                res.status(500).send("Ocorreu um erro: " + error);  
+            }
         },
-        edit: function(req, res) {
-           var _id = req.session.usuario._id;
-           Usuario.findById(_id, function(erro, usuario) {
-               var contatoID = req.params.id;
-               var contato = usuario.contatos.id(contatoID);
-               var resultado = { contato: contato };
-               res.render('contatos/edit', resultado);
-           })
+        edit: async function(req, res) {
+            try {
+              var _id = req.session.usuario._id;
+              var contatoID = req.params.id;
+              var contato = await Usuario.findById(_id).exec(); 
+              contato = contato.contatos.id(contatoID);
+              res.render('contatos/edit', { contato: contato }); 
+            } catch (error) {
+                res.status(500).send("Ocorreu um erro: " + error);
+            }
         },
-        update: function(req, res) {
-            var _id = req.session.usuario._id;
-            Usuario.findById(_id, function(erro, usuario) {
+        update: async function(req, res) {
+            try {
+                var _id = req.session.usuario._id;
                 var contatoID = req.params.id;
-                var contato = usuario.contatos.id(contatoID);
+                var usuario = await Usuario.findById(_id).exec();
+                const contato = usuario.contatos.id(contatoID);
                 contato.nome = req.body.contato.nome;
                 contato.email = req.body.contato.email;
-                usuario.save(function() {
-                    res.redirect('/contatos');
-                });
-            });
+                await usuario.save();
+                res.redirect('/contatos');
+            } catch (error) {
+                res.status(500).send("Ocorreu um erro: " + error);
+            }
         },
-        destroy: function(req, res) {
-            var _id = req.session.usuario._id;
-            Usuario.findById(_id, function(erro, usuario) {
+        destroy: async function(req, res) {
+            try {
+                var _id = req.session.usuario._id;
                 var contatoID = req.params.id;
+                var usuario = await Usuario.findById(_id).exec();
                 usuario.contatos.id(contatoID).remove();
-                usuario.save(function() {
-                    res.redirect('/contatos');
-                });
-            });
+                await usuario.save();
+                res.redirect('/contatos');
+            } catch (error) {
+                res.status(500).send("Ocorreu um erro: " + error);
+            }
         }
     }
     return ContatosController;
