@@ -8,27 +8,30 @@
             <input type="text" name="contato[email]" placeholder="E-mail">
             <button	type="submit">Cadastrar</button>
         </form>
-			<table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% contatos.forEach(function(contato, index) { %>
-                            <tr>
-                                <td><%- contato.nome %></td>
-                                <td><%-	contato.email %></td>
-                                <td>
-                                    <a	href="/contato/<%- index %>">Detalhes</a>
-                                    <a href="/chat">Conversar</a>
-                                </td>
-                            </tr>
-                    <% }) %>
-                </tbody>
-			</table>
-		</section>
-		<% include ../exit %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% contatos.forEach(function(contato, index) { %>
+                        <tr>
+                            <td><%- contato.nome %></td>
+                            <td><%-	contato.email %></td>
+                            <td>
+                                <a href="/contato/<%- index %>">Detalhes</a>
+                                <a href="/chat" id="chat_<%- contato.email %>">
+                                    Conversar
+                                </a>
+                            </td>
+                        </tr>
+                <% }) %>
+            </tbody>
+        </table>
+	</section>
+<% include notify_script %>
+<% include ../exit %>
 <% include ../footer %>
