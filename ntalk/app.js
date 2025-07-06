@@ -6,13 +6,14 @@ var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 var methodOverride = require('method-override');
 var error = require('./middlewares/error');
+require('dotenv').config();
 
 var app = express();
 
 var cookie = cookieParser(SECRET);
 var store = new expressSession.MemoryStore();
 var mongoose = require('mongoose');
-global.db = mongoose.connect('mongodb+srv://felipemen74:Fkwvec67sc3jnvnN@cluster0.itdrono.mongodb.net/ntalk');
+mongoose.connect(process.env.MONGODB_URI);
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
