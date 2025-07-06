@@ -11,6 +11,8 @@ var app = express();
 
 var cookie = cookieParser(SECRET);
 var store = new expressSession.MemoryStore();
+var mongoose = require('mongoose');
+global.db = mongoose.connect('mongodb+srv://felipemen74:Fkwvec67sc3jnvnN@cluster0.itdrono.mongodb.net/ntalk');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
