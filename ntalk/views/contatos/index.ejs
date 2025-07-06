@@ -23,15 +23,20 @@
                             <td><%-	contato.email %></td>
                             <td>
                                 <a href="/contato/<%- index %>">Detalhes</a>
-                                <a href="/chat" id="chat_<%- contato.email %>">
-                                    Conversar
-                                </a>
+                                <a href="#" onclick="abrirChat('<%= contato.email %>')" id="chat_<%= contato.email %>">Conversar</a>
                             </td>
                         </tr>
                 <% }) %>
             </tbody>
         </table>
 	</section>
+    <script>
+        function abrirChat(emailContato) {
+            const emailUsuario = '<%= usuario.email %>';
+            const sala = [emailUsuario, emailContato].sort().join(':');
+            window.location.href = '/chat?sala=' + sala;
+        }
+    </script>
 <% include notify_script %>
 <% include ../exit %>
 <% include ../footer %>

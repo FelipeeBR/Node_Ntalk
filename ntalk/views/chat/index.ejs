@@ -1,27 +1,37 @@
 <% include ../header %>
-	<script	src="/socket.io/socket.io.js"></script>
-	<script>
-        var	socket = io('http://localhost:3000');
-        try {
-            socket.emit('join', '<%- sala %>');
-            socket.on('send-client', function (msg) {
-                document.getElementById('chat').innerHTML += msg;
-            });
-            var	enviar = function() {
-                var	msg	= document.getElementById('msg');
-                socket.emit('send-server',	msg.value);
-            };
-        } catch (error) {
-            console.log(error);
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const sala = new URLSearchParams(window.location.search).get('sala');
+
+    if (sala) {
+        socket.emit('join', sala);
+    }
+
+    function enviar() {
+        const input = document.getElementById('msg');
+        const mensagem = input.value.trim();
+
+        if (mensagem.length > 0) {
+            socket.emit('send-server', mensagem);
+            input.value = '';
         }
-	</script>
-	<header>
-		<h2>Ntalk -	Chat</h2>
-	</header>
-	<section>
-		<pre id="chat"></pre>
-			<input type="text" id="msg" placeholder="Mensagem">
-			<button	onclick="enviar();">Enviar</button>
-		</section>
+    }
+    socket.on('send-client', function(msg) {
+        const chat = document.getElementById('chat');
+        chat.innerHTML += msg;
+    });
+</script>
+
+<header>
+    <h2>Ntalk - Chat</h2>
+</header>
+
+<section>
+    <pre id="chat"></pre>
+    <input type="text" id="msg" placeholder="Mensagem">
+    <button onclick="enviar();">Enviar</button>
+</section>
+
 <% include ../exit %>
 <% include ../footer %>

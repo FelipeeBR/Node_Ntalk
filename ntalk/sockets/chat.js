@@ -9,16 +9,11 @@ module.exports = function(io) {
             var sala = session.sala;
             var data = {email: usuario.email, sala: sala}
             msg = "<b>"+ usuario.nome +":</b> "+ msg +"<br>";
-            client.broadcast.emit('new-message', data);
+            client.broadcast.to(sala).emit('new-message', data);
             sockets.in(sala).emit('send-client', msg);
         });
 
         client.on('join', function(sala) {
-            if(!sala) {
-                var timestamp = new Date().toString();
-                var md5 = crypto.createHash('md5');
-                sala = md5.update(timestamp).digest('hex');
-            }
             console.log('Cliente entrou na sala:', sala);
             session.sala = sala;
             client.join(sala);
