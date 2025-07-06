@@ -5,7 +5,21 @@
     const urlParams = new URLSearchParams(window.location.search);
     const sala = urlParams.get('sala');
 
-    if (sala) {
+    var	notify = function(data) {
+		var	id = 'notify_' + data.email;
+		var notify = document.getElementById(id);
+		if(notify)	{
+			notify.textContent = data.msg;
+		}
+	};
+	socket.on('notify-onlines',	function(email) {
+		notify({email: email, msg: 'Online'});
+	});
+	socket.on('notify-offlines', function(email) {
+		notify({email: email, msg: 'Offline'});
+	});
+
+    if(sala) {
         socket.emit('join', sala);
     }
 
